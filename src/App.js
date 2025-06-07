@@ -17,7 +17,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { fetchWeather } from './api/weather';
-import { getNextDate, formatDate } from './utils/dateHelpers';
+import { getNextDate, formatDate, addOneDay } from './utils/dateHelpers';
 import { getSummary } from './utils/weatherSummary';
 import WeatherCard from './components/WeatherCard';
 
@@ -208,9 +208,9 @@ export default function App() {
             </Grid>
             <Grid item xs={10} md={5}>
               <WeatherCard
-                title={`This ${day} the ${
-                  weather.thisWeek?.days?.[0]?.datetime || ''
-                }`}
+                title={`This ${day} the ${addOneDay(
+                  weather.thisWeek?.days?.[0]?.datetime
+                )}`}
                 summary={thisSummary}
                 hours={weather.thisWeek?.days?.[0]?.hours || []}
                 timeRange={time}
@@ -220,9 +220,9 @@ export default function App() {
             </Grid>
             <Grid item xs={10} md={5}>
               <WeatherCard
-                title={`Next ${day} the ${
-                  weather.nextWeek?.days?.[0]?.datetime || ''
-                }`}
+                title={`Next ${day} the ${addOneDay(
+                  weather.nextWeek?.days?.[0]?.datetime
+                )}`}
                 summary={nextSummary}
                 hours={weather.nextWeek?.days?.[0]?.hours || []}
                 timeRange={time}

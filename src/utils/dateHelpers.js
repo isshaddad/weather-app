@@ -13,3 +13,10 @@ export function getNextDate(dayOfWeek, offsetWeeks = 0) {
 export function formatDate(date) {
   return date.toISOString().slice(0, 10);
 }
+
+export function addOneDay(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  d.setDate(d.getDate() + 1);
+  return d.toISOString().slice(0, 10);
+}

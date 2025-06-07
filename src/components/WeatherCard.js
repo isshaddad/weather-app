@@ -1,6 +1,27 @@
 import React from 'react';
-import { Paper, Typography, Box, CircularProgress, Alert } from '@mui/material';
+import {
+  Paper,
+  Typography,
+  Box,
+  CircularProgress,
+  Alert,
+  useMediaQuery,
+} from '@mui/material';
+import WbSunnyOutlinedIcon from '@mui/icons-material/WbSunnyOutlined';
+import CloudOutlinedIcon from '@mui/icons-material/CloudOutlined';
+import OpacityOutlinedIcon from '@mui/icons-material/OpacityOutlined';
+import AirOutlinedIcon from '@mui/icons-material/AirOutlined';
 import WeatherChart from './WeatherChart';
+
+function getWeatherIcon(desc) {
+  // Simple mapping for demo; expand as needed
+  if (desc.toLowerCase().includes('sun'))
+    return <WbSunnyOutlinedIcon sx={{ fontSize: 48 }} />;
+  if (desc.toLowerCase().includes('cloud'))
+    return <CloudOutlinedIcon sx={{ fontSize: 48 }} />;
+  // Add more mappings as needed
+  return <WbSunnyOutlinedIcon sx={{ fontSize: 48 }} />;
+}
 
 export default function WeatherCard({
   title,
@@ -10,6 +31,7 @@ export default function WeatherCard({
   loading,
   error,
 }) {
+  const isSmall = useMediaQuery('(max-width:600px)');
   return (
     <Paper
       elevation={2}
@@ -31,13 +53,38 @@ export default function WeatherCard({
       >
         {title}
       </Typography>
-      <Box sx={{ mt: 2, mb: 2 }}>
-        <Typography variant="body1">
-          {summary.desc} {summary.temp}
-        </Typography>
-        <Typography variant="body2">
-          {summary.wind}, {summary.rain}
-        </Typography>
+      <Box
+        sx={{
+          mt: 2,
+          mb: 2,
+          display: 'flex',
+          flexDirection: isSmall ? 'column' : 'row',
+          alignItems: isSmall ? 'flex-start' : 'center',
+          gap: 2,
+        }}
+      >
+        <Box
+          sx={{ display: 'flex', alignItems: 'center', mr: isSmall ? 0 : 2 }}
+        >
+          {getWeatherIcon(summary.desc)}
+        </Box>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+          <Typography variant="body1" sx={{ fontWeight: 500, fontSize: 20 }}>
+            {summary.desc} {summary.temp}
+          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <AirOutlinedIcon sx={{ fontSize: 20, mr: 0.5 }} />
+            <Typography variant="body2" sx={{ fontSize: 16 }}>
+              {summary.wind}
+            </Typography>
+          </Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <OpacityOutlinedIcon sx={{ fontSize: 20, mr: 0.5 }} />
+            <Typography variant="body2" sx={{ fontSize: 16 }}>
+              {summary.rain}
+            </Typography>
+          </Box>
+        </Box>
       </Box>
       <Box
         sx={{
