@@ -63,7 +63,10 @@ export default function Parameters({
             alignItems: 'center',
           }}
         >
-          <Typography variant="body1" sx={{ fontWeight: 500, mr: 1 }}>
+          <Typography
+            variant="body1"
+            sx={{ fontWeight: 400, color: '#222', mr: 1 }}
+          >
             Every
           </Typography>
           <TextField

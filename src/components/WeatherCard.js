@@ -45,10 +45,11 @@ export default function WeatherCard({
       }}
     >
       <Typography
-        variant="h6"
+        variant="h4"
         sx={{
           color: title.startsWith('This') ? '#e74c3c' : '#222',
           fontWeight: 700,
+          mb: 2,
         }}
       >
         {title}
@@ -69,18 +70,21 @@ export default function WeatherCard({
           {getWeatherIcon(summary.desc)}
         </Box>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-          <Typography variant="body1" sx={{ fontWeight: 500, fontSize: 20 }}>
+          <Typography
+            variant="body1"
+            sx={{ fontWeight: 400, fontSize: 20, color: '#222' }}
+          >
             {summary.desc} {summary.temp}
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <AirOutlinedIcon sx={{ fontSize: 20, mr: 0.5 }} />
-            <Typography variant="body2" sx={{ fontSize: 16 }}>
+            <Typography variant="body2" sx={{ fontSize: 14, color: '#222' }}>
               {summary.wind}
             </Typography>
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <OpacityOutlinedIcon sx={{ fontSize: 20, mr: 0.5 }} />
-            <Typography variant="body2" sx={{ fontSize: 16 }}>
+            <Typography variant="body2" sx={{ fontSize: 14, color: '#222' }}>
               {summary.rain}
             </Typography>
           </Box>
