@@ -1,9 +1,11 @@
 import React from 'react';
-import { IconButton, Box, Grid, CircularProgress, Alert } from '@mui/material';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { Box, Grid, CircularProgress, Alert } from '@mui/material';
 import { fetchWeather } from './api/weather';
-import { getNextDate, formatDate, addOneDay } from './utils/dateHelpers';
+import {
+  getNextDate,
+  formatDate,
+  formatDisplayDateWithSuffix,
+} from './utils/dateHelpers';
 import { getSummary } from './utils/weatherSummary';
 import WeatherCard from './components/WeatherCard';
 import LoginForm from './components/LoginForm';
@@ -45,7 +47,7 @@ export default function App() {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
 
-  const API_KEY = process.env.REACT_APP_VISUAL_CROSSING_API_KEY;
+  const API_KEY = '88CC5DNF452PHS2VUSYE6RR6R';
 
   React.useEffect(() => {
     let isMounted = true;
@@ -130,64 +132,41 @@ export default function App() {
               <CircularProgress />
             </Box>
           )}
-          {error && <Alert severity="error">{error}</Alert>}
-          <Grid
-            container
-            spacing={2}
-            alignItems="center"
-            justifyContent="center"
-          >
+          {error ? (
+            <Alert severity="error">{error}</Alert>
+          ) : (
             <Grid
-              item
-              xs={1}
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
+              container
+              spacing={3}
+              alignItems="center"
+              justifyContent="center"
             >
-              <IconButton>
-                <ArrowBackIosNewIcon />
-              </IconButton>
+              <Grid item xs={12} md={5}>
+                <WeatherCard
+                  title={`This ${day} ${formatDisplayDateWithSuffix(
+                    weather.thisWeek?.days?.[0]?.datetime
+                  )}`}
+                  summary={thisSummary}
+                  hours={weather.thisWeek?.days?.[0]?.hours || []}
+                  timeRange={time}
+                  loading={loading}
+                  error={error}
+                />
+              </Grid>
+              <Grid item xs={12} md={5}>
+                <WeatherCard
+                  title={`Next ${day} ${formatDisplayDateWithSuffix(
+                    weather.nextWeek?.days?.[0]?.datetime
+                  )}`}
+                  summary={nextSummary}
+                  hours={weather.nextWeek?.days?.[0]?.hours || []}
+                  timeRange={time}
+                  loading={loading}
+                  error={error}
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={10} md={5}>
-              <WeatherCard
-                title={`This ${day} the ${addOneDay(
-                  weather.thisWeek?.days?.[0]?.datetime
-                )}`}
-                summary={thisSummary}
-                hours={weather.thisWeek?.days?.[0]?.hours || []}
-                timeRange={time}
-                loading={loading}
-                error={error}
-              />
-            </Grid>
-            <Grid item xs={10} md={5}>
-              <WeatherCard
-                title={`Next ${day} the ${addOneDay(
-                  weather.nextWeek?.days?.[0]?.datetime
-                )}`}
-                summary={nextSummary}
-                hours={weather.nextWeek?.days?.[0]?.hours || []}
-                timeRange={time}
-                loading={loading}
-                error={error}
-              />
-            </Grid>
-            <Grid
-              item
-              xs={1}
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              <IconButton>
-                <ArrowForwardIosIcon />
-              </IconButton>
-            </Grid>
-          </Grid>
+          )}
         </Box>
       </Box>
     </Box>
