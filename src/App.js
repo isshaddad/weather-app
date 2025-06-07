@@ -10,11 +10,16 @@ import {
   TextField,
   MenuItem,
   Button,
+  CircularProgress,
+  Alert,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { fetchWeather } from './api/weather';
+import { getNextDate, formatDate } from './utils/dateHelpers';
+import { getSummary } from './utils/weatherSummary';
 
 const days = [
   'Monday',
@@ -35,6 +40,49 @@ export default function App() {
   const [location, setLocation] = React.useState('Dolores Park, SF');
   const [day, setDay] = React.useState('Friday');
   const [time, setTime] = React.useState('afternoon');
+  const [weather, setWeather] = React.useState({
+    thisWeek: null,
+    nextWeek: null,
+  });
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState(null);
+
+  const API_KEY = process.env.REACT_APP_VISUAL_CROSSING_API_KEY;
+
+  React.useEffect(() => {
+    let isMounted = true;
+    async function loadWeather() {
+      setLoading(true);
+      setError(null);
+      try {
+        // Get the next two dates for the selected day
+        const dayIdx = days.indexOf(day);
+        const thisFriday = getNextDate(dayIdx, 0);
+        const nextFriday = getNextDate(dayIdx, 1);
+        // Fetch both weeks in parallel for scalability
+        const [thisWeekData, nextWeekData] = await Promise.all([
+          fetchWeather(location, formatDate(thisFriday), API_KEY),
+          fetchWeather(location, formatDate(nextFriday), API_KEY),
+        ]);
+        if (isMounted) {
+          console.log('thisWeekData', thisWeekData);
+          console.log('nextWeekData', nextWeekData);
+          setWeather({ thisWeek: thisWeekData, nextWeek: nextWeekData });
+        }
+      } catch (err) {
+        if (isMounted) setError(err.message);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    }
+    loadWeather();
+    return () => {
+      isMounted = false;
+    };
+  }, [location, day, time, API_KEY]);
+
+  const thisSummary = getSummary(weather.thisWeek);
+  const nextSummary = getSummary(weather.nextWeek);
 
   return (
     <Box sx={{ flexGrow: 1, bgcolor: '#fff5f6', minHeight: '100vh' }}>
@@ -133,6 +181,12 @@ export default function App() {
           </Grid>
         </Grid>
         <Box sx={{ mt: 4 }}>
+          {loading && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
+              <CircularProgress />
+            </Box>
+          )}
+          {error && <Alert severity="error">{error}</Alert>}
           <Grid
             container
             spacing={2}
@@ -161,12 +215,15 @@ export default function App() {
                   variant="h6"
                   sx={{ color: '#e74c3c', fontWeight: 700 }}
                 >
-                  This Friday the 15th
+                  This {day} the {weather.thisWeek?.days?.[0]?.datetime || ''}
                 </Typography>
                 <Box sx={{ mt: 2, mb: 2 }}>
-                  {/* Weather icon and summary placeholder */}
-                  <Typography variant="body1">Sunny 71°F</Typography>
-                  <Typography variant="body2">winds 5mph, no rain</Typography>
+                  <Typography variant="body1">
+                    {thisSummary.desc} {thisSummary.temp}
+                  </Typography>
+                  <Typography variant="body2">
+                    {thisSummary.wind}, {thisSummary.rain}
+                  </Typography>
                 </Box>
                 <Box
                   sx={{
@@ -179,7 +236,6 @@ export default function App() {
                     justifyContent: 'center',
                   }}
                 >
-                  {/* Chart placeholder */}
                   <Typography variant="caption" color="text.secondary">
                     [Chart Here]
                   </Typography>
@@ -195,13 +251,14 @@ export default function App() {
                   variant="h6"
                   sx={{ color: '#222', fontWeight: 700 }}
                 >
-                  Next Friday the 15th
+                  Next {day} the {weather.nextWeek?.days?.[0]?.datetime || ''}
                 </Typography>
                 <Box sx={{ mt: 2, mb: 2 }}>
-                  {/* Weather icon and summary placeholder */}
-                  <Typography variant="body1">Cloudy 62°F</Typography>
+                  <Typography variant="body1">
+                    {nextSummary.desc} {nextSummary.temp}
+                  </Typography>
                   <Typography variant="body2">
-                    winds 20mph, 40% chance rain
+                    {nextSummary.wind}, {nextSummary.rain}
                   </Typography>
                 </Box>
                 <Box
@@ -215,7 +272,6 @@ export default function App() {
                     justifyContent: 'center',
                   }}
                 >
-                  {/* Chart placeholder */}
                   <Typography variant="caption" color="text.secondary">
                     [Chart Here]
                   </Typography>
