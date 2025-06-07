@@ -119,9 +119,26 @@ export default function App() {
   }
 
   return (
-    <Box sx={{ flexGrow: 1, bgcolor: '#fff5f6', minHeight: '100vh' }}>
+    <Box
+      sx={{
+        flexGrow: 1,
+        bgcolor: '#fff5f6',
+        minHeight: '100vh',
+        width: '100vw',
+        maxWidth: '100vw',
+        overflowX: 'hidden',
+      }}
+    >
       <TopBar onHelp={handleHelp} onSignOut={handleLogout} />
-      <Box sx={{ p: { xs: 2, md: 4 }, maxWidth: 1200, mx: 'auto' }}>
+      <Box
+        sx={{
+          p: { xs: 2, md: 4 },
+          maxWidth: 1200,
+          mx: 'auto',
+          width: '100%',
+          overflowX: 'hidden',
+        }}
+      >
         <Parameters
           location={location}
           setLocation={setLocation}

@@ -25,7 +25,7 @@ export default function LoginForm({ onLogin }) {
         bgcolor: '#fff5f6',
       }}
     >
-      <Paper sx={{ p: 4, minWidth: 320 }}>
+      <Paper sx={{ p: { xs: 2, sm: 4 }, minWidth: 320 }}>
         <Typography
           variant="h5"
           sx={{ mb: 2, fontWeight: 700, color: '#e74c3c' }}

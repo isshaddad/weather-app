@@ -240,7 +240,7 @@ export default function WeatherChart({ hours = [], timeRange = 'afternoon' }) {
     <div
       style={{
         width: '100%',
-        height: 220,
+        height: 320,
         background: '#fff',
         borderRadius: 16,
         boxShadow: '0 2px 8px #0001',
