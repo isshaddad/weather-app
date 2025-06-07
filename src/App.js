@@ -6,7 +6,6 @@ import {
   IconButton,
   Box,
   Grid,
-  Paper,
   TextField,
   MenuItem,
   Button,
@@ -20,6 +19,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { fetchWeather } from './api/weather';
 import { getNextDate, formatDate } from './utils/dateHelpers';
 import { getSummary } from './utils/weatherSummary';
+import WeatherCard from './components/WeatherCard';
 
 const days = [
   'Monday',
@@ -207,76 +207,28 @@ export default function App() {
               </IconButton>
             </Grid>
             <Grid item xs={10} md={5}>
-              <Paper
-                elevation={2}
-                sx={{ p: 2, minHeight: 320, bgcolor: '#fff' }}
-              >
-                <Typography
-                  variant="h6"
-                  sx={{ color: '#e74c3c', fontWeight: 700 }}
-                >
-                  This {day} the {weather.thisWeek?.days?.[0]?.datetime || ''}
-                </Typography>
-                <Box sx={{ mt: 2, mb: 2 }}>
-                  <Typography variant="body1">
-                    {thisSummary.desc} {thisSummary.temp}
-                  </Typography>
-                  <Typography variant="body2">
-                    {thisSummary.wind}, {thisSummary.rain}
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    height: 140,
-                    bgcolor: '#f9f9f9',
-                    borderRadius: 2,
-                    mb: 2,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <Typography variant="caption" color="text.secondary">
-                    [Chart Here]
-                  </Typography>
-                </Box>
-              </Paper>
+              <WeatherCard
+                title={`This ${day} the ${
+                  weather.thisWeek?.days?.[0]?.datetime || ''
+                }`}
+                summary={thisSummary}
+                hours={weather.thisWeek?.days?.[0]?.hours || []}
+                timeRange={time}
+                loading={loading}
+                error={error}
+              />
             </Grid>
             <Grid item xs={10} md={5}>
-              <Paper
-                elevation={2}
-                sx={{ p: 2, minHeight: 320, bgcolor: '#fff' }}
-              >
-                <Typography
-                  variant="h6"
-                  sx={{ color: '#222', fontWeight: 700 }}
-                >
-                  Next {day} the {weather.nextWeek?.days?.[0]?.datetime || ''}
-                </Typography>
-                <Box sx={{ mt: 2, mb: 2 }}>
-                  <Typography variant="body1">
-                    {nextSummary.desc} {nextSummary.temp}
-                  </Typography>
-                  <Typography variant="body2">
-                    {nextSummary.wind}, {nextSummary.rain}
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    height: 140,
-                    bgcolor: '#f9f9f9',
-                    borderRadius: 2,
-                    mb: 2,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <Typography variant="caption" color="text.secondary">
-                    [Chart Here]
-                  </Typography>
-                </Box>
-              </Paper>
+              <WeatherCard
+                title={`Next ${day} the ${
+                  weather.nextWeek?.days?.[0]?.datetime || ''
+                }`}
+                summary={nextSummary}
+                hours={weather.nextWeek?.days?.[0]?.hours || []}
+                timeRange={time}
+                loading={loading}
+                error={error}
+              />
             </Grid>
             <Grid
               item
