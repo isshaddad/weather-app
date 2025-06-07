@@ -1,14 +1,5 @@
 import React from 'react';
-import {
-  IconButton,
-  Box,
-  Grid,
-  TextField,
-  MenuItem,
-  CircularProgress,
-  Alert,
-} from '@mui/material';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { IconButton, Box, Grid, CircularProgress, Alert } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { fetchWeather } from './api/weather';
@@ -17,6 +8,7 @@ import { getSummary } from './utils/weatherSummary';
 import WeatherCard from './components/WeatherCard';
 import LoginForm from './components/LoginForm';
 import TopBar from './components/TopBar';
+import Parameters from './components/Parameters';
 
 const days = [
   'Monday',
@@ -122,67 +114,16 @@ export default function App() {
     <Box sx={{ flexGrow: 1, bgcolor: '#fff5f6', minHeight: '100vh' }}>
       <TopBar onHelp={handleHelp} onSignOut={handleLogout} />
       <Box sx={{ p: { xs: 2, md: 4 }, maxWidth: 1200, mx: 'auto' }}>
-        <Grid
-          container
-          spacing={2}
-          alignItems="center"
-          justifyContent="space-between"
-        >
-          <Grid item xs={12} md={4}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <LocationOnIcon color="action" />
-              <TextField
-                variant="standard"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                InputProps={{
-                  disableUnderline: true,
-                  style: { fontWeight: 600, fontSize: 20 },
-                }}
-                sx={{ minWidth: 180 }}
-              />
-            </Box>
-          </Grid>
-          <Grid
-            item
-            xs={12}
-            md={4}
-            sx={{
-              display: 'flex',
-              justifyContent: { xs: 'flex-start', md: 'center' },
-              gap: 2,
-            }}
-          >
-            <TextField
-              select
-              variant="standard"
-              value={day}
-              onChange={(e) => setDay(e.target.value)}
-              InputProps={{ disableUnderline: true }}
-              sx={{ minWidth: 120 }}
-            >
-              {days.map((d) => (
-                <MenuItem key={d} value={d}>
-                  {d}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              select
-              variant="standard"
-              value={time}
-              onChange={(e) => setTime(e.target.value)}
-              InputProps={{ disableUnderline: true }}
-              sx={{ minWidth: 120 }}
-            >
-              {times.map((t) => (
-                <MenuItem key={t.value} value={t.value}>
-                  {t.label}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
-        </Grid>
+        <Parameters
+          location={location}
+          setLocation={setLocation}
+          day={day}
+          setDay={setDay}
+          time={time}
+          setTime={setTime}
+          days={days}
+          times={times}
+        />
         <Box sx={{ mt: 4 }}>
           {loading && (
             <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
