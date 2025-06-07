@@ -1,18 +1,13 @@
 import React from 'react';
 import {
-  AppBar,
-  Toolbar,
-  Typography,
   IconButton,
   Box,
   Grid,
   TextField,
   MenuItem,
-  Button,
   CircularProgress,
   Alert,
 } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -21,6 +16,7 @@ import { getNextDate, formatDate, addOneDay } from './utils/dateHelpers';
 import { getSummary } from './utils/weatherSummary';
 import WeatherCard from './components/WeatherCard';
 import LoginForm from './components/LoginForm';
+import TopBar from './components/TopBar';
 
 const days = [
   'Monday',
@@ -114,56 +110,17 @@ export default function App() {
     localStorage.removeItem('userEmail');
   };
 
+  const handleHelp = () => {
+    window.open('https://www.youtube.com/watch?v=2Q_ZzBGPdqE', '_blank');
+  };
+
   if (!userEmail) {
     return <LoginForm onLogin={handleLogin} />;
   }
 
   return (
     <Box sx={{ flexGrow: 1, bgcolor: '#fff5f6', minHeight: '100vh' }}>
-      <AppBar
-        position="static"
-        color="transparent"
-        elevation={0}
-        sx={{ borderBottom: 1, borderColor: '#eee' }}
-      >
-        <Toolbar>
-          <Typography
-            variant="h6"
-            sx={{ flexGrow: 1, color: '#e74c3c', fontWeight: 700 }}
-          >
-            WHETHER.IO
-          </Typography>
-          <Box
-            sx={{
-              display: { xs: 'none', md: 'flex' },
-              alignItems: 'center',
-              gap: 2,
-            }}
-          >
-            <Button
-              color="inherit"
-              onClick={() =>
-                window.open(
-                  'https://www.youtube.com/watch?v=2Q_ZzBGPdqE',
-                  '_blank'
-                )
-              }
-            >
-              Help
-            </Button>
-            <Button color="inherit" onClick={handleLogout}>
-              Sign Out
-            </Button>
-          </Box>
-          <IconButton
-            edge="end"
-            color="inherit"
-            sx={{ display: { xs: 'flex', md: 'none' } }}
-          >
-            <MenuIcon />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
+      <TopBar onHelp={handleHelp} onSignOut={handleLogout} />
       <Box sx={{ p: { xs: 2, md: 4 }, maxWidth: 1200, mx: 'auto' }}>
         <Grid
           container
