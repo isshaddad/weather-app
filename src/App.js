@@ -5,6 +5,7 @@ import {
   getNextDate,
   formatDate,
   formatDisplayDateWithSuffix,
+  addDays,
 } from './utils/dateHelpers';
 import { getSummary } from './utils/weatherSummary';
 import WeatherCard from './components/WeatherCard';
@@ -46,6 +47,10 @@ export default function App() {
   });
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
+  const [requestedDates, setRequestedDates] = React.useState({
+    thisDay: null,
+    nextDay: null,
+  });
 
   const API_KEY = '88CC5DNF452PHS2VUSYE6RR6R';
 
@@ -57,17 +62,18 @@ export default function App() {
       try {
         // Get the next two dates for the selected day
         const dayIdx = days.indexOf(day);
-        const thisFriday = getNextDate(dayIdx, 0);
-        const nextFriday = getNextDate(dayIdx, 1);
+        const thisDay = addDays(getNextDate(dayIdx, 0), 1);
+        const nextDay = addDays(getNextDate(dayIdx, 1), 1);
         // Fetch both weeks in parallel for scalability
         const [thisWeekData, nextWeekData] = await Promise.all([
-          fetchWeather(location, formatDate(thisFriday), API_KEY),
-          fetchWeather(location, formatDate(nextFriday), API_KEY),
+          fetchWeather(location, formatDate(thisDay), API_KEY),
+          fetchWeather(location, formatDate(nextDay), API_KEY),
         ]);
         if (isMounted) {
           console.log('thisWeekData', thisWeekData);
           console.log('nextWeekData', nextWeekData);
           setWeather({ thisWeek: thisWeekData, nextWeek: nextWeekData });
+          setRequestedDates({ thisDay, nextDay });
         }
       } catch (err) {
         if (isMounted) setError(err.message);
@@ -144,7 +150,7 @@ export default function App() {
               <Grid item xs={12} md={5}>
                 <WeatherCard
                   title={`This ${day} ${formatDisplayDateWithSuffix(
-                    weather.thisWeek?.days?.[0]?.datetime
+                    requestedDates.thisDay
                   )}`}
                   summary={thisSummary}
                   hours={weather.thisWeek?.days?.[0]?.hours || []}
@@ -156,7 +162,7 @@ export default function App() {
               <Grid item xs={12} md={5}>
                 <WeatherCard
                   title={`Next ${day} ${formatDisplayDateWithSuffix(
-                    weather.nextWeek?.days?.[0]?.datetime
+                    requestedDates.nextDay
                   )}`}
                   summary={nextSummary}
                   hours={weather.nextWeek?.days?.[0]?.hours || []}

@@ -6,7 +6,13 @@ export function getNextDate(dayOfWeek, offsetWeeks = 0) {
   let daysUntil = dayOfWeek - currentDay;
   if (daysUntil < 0) daysUntil += 7;
   daysUntil += offsetWeeks * 7;
-  result.setDate(today.getDate() + daysUntil + 2);
+  result.setDate(today.getDate() + daysUntil);
+  return result;
+}
+
+export function addDays(date, days) {
+  const result = new Date(date);
+  result.setDate(result.getDate() + days);
   return result;
 }
 
@@ -14,9 +20,12 @@ export function formatDate(date) {
   return date.toISOString().slice(0, 10);
 }
 
-export function formatDisplayDateWithSuffix(dateString) {
-  if (!dateString) return '';
-  const date = new Date(dateString);
+export function formatDisplayDateWithSuffix(dateStringOrDate) {
+  if (!dateStringOrDate) return '';
+  const date =
+    typeof dateStringOrDate === 'string'
+      ? new Date(dateStringOrDate)
+      : dateStringOrDate;
   const day = date.getDate();
   const month = date.toLocaleString('en-US', { month: 'long' });
   // Get ordinal suffix
