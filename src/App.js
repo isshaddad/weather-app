@@ -20,6 +20,7 @@ import { fetchWeather } from './api/weather';
 import { getNextDate, formatDate, addOneDay } from './utils/dateHelpers';
 import { getSummary } from './utils/weatherSummary';
 import WeatherCard from './components/WeatherCard';
+import LoginForm from './components/LoginForm';
 
 const days = [
   'Monday',
@@ -46,6 +47,9 @@ export default function App() {
   });
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
+  const [userEmail, setUserEmail] = React.useState(
+    () => localStorage.getItem('userEmail') || ''
+  );
 
   const API_KEY = process.env.REACT_APP_VISUAL_CROSSING_API_KEY;
 
@@ -84,6 +88,19 @@ export default function App() {
   const thisSummary = getSummary(weather.thisWeek);
   const nextSummary = getSummary(weather.nextWeek);
 
+  const handleLogin = (email) => {
+    setUserEmail(email);
+    localStorage.setItem('userEmail', email);
+  };
+  const handleLogout = () => {
+    setUserEmail('');
+    localStorage.removeItem('userEmail');
+  };
+
+  if (!userEmail) {
+    return <LoginForm onLogin={handleLogin} />;
+  }
+
   return (
     <Box sx={{ flexGrow: 1, bgcolor: '#fff5f6', minHeight: '100vh' }}>
       <AppBar
@@ -107,7 +124,9 @@ export default function App() {
             }}
           >
             <Button color="inherit">Help</Button>
-            <Button color="inherit">Sign Out</Button>
+            <Button color="inherit" onClick={handleLogout}>
+              Sign Out
+            </Button>
           </Box>
           <IconButton
             edge="end"

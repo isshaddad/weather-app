@@ -96,7 +96,6 @@ export default function WeatherCard({
       >
         <Box
           sx={{
-            bgcolor: '#f9f9f9',
             borderRadius: 2,
             mb: 2,
             display: 'flex',
