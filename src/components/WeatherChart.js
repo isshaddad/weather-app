@@ -87,6 +87,9 @@ export default function WeatherChart({ hours = [], timeRange = 'afternoon' }) {
   const startIdx = labels.findIndex((l) => parseInt(l) === highlightStart);
   const endIdx = labels.findIndex((l) => parseInt(l) === highlightEnd);
 
+  // Find max rain for scaling
+  const rainMax = Math.max(0.1, ...rainData);
+
   const data = {
     labels,
     datasets: [
@@ -179,9 +182,9 @@ export default function WeatherChart({ hours = [], timeRange = 'afternoon' }) {
             family: 'monospace',
             size: 12,
             weight: (ctx) => {
-              // Bold if in highlight range
               const hour = parseInt(labels[ctx.index]);
-              return hour >= highlightStart && hour < highlightEnd
+              // Bold if in highlight range (inclusive of end)
+              return hour >= highlightStart && hour <= highlightEnd
                 ? 'bold'
                 : 'normal';
             },
@@ -189,8 +192,8 @@ export default function WeatherChart({ hours = [], timeRange = 'afternoon' }) {
           callback: function (value, index) {
             const hour = parseInt(labels[index]);
             const ampm = toAmPm(hour);
-            // Bold if in highlight range
-            if (hour >= highlightStart && hour < highlightEnd) {
+            // Bold if in highlight range (inclusive of end)
+            if (hour >= highlightStart && hour <= highlightEnd) {
               return ampm;
             }
             return ampm;
@@ -200,14 +203,20 @@ export default function WeatherChart({ hours = [], timeRange = 'afternoon' }) {
       y: {
         display: false,
         position: 'left',
+        min: 0,
+        max: 100,
       },
       y1: {
         display: false,
         position: 'right',
+        min: 0,
+        max: rainMax,
       },
       y2: {
         display: false,
         position: 'right',
+        min: 0,
+        max: 40,
       },
     },
     elements: {
@@ -228,7 +237,16 @@ export default function WeatherChart({ hours = [], timeRange = 'afternoon' }) {
   }
 
   return (
-    <div style={{ width: '100%', height: 170 }}>
+    <div
+      style={{
+        width: '100%',
+        height: 220,
+        background: '#fff',
+        borderRadius: 16,
+        boxShadow: '0 2px 8px #0001',
+        padding: 12,
+      }}
+    >
       <div
         style={{
           display: 'flex',
@@ -260,16 +278,16 @@ export default function WeatherChart({ hours = [], timeRange = 'afternoon' }) {
           </span>
         ))}
       </div>
-      <Line data={data} options={options} height={140} />
+      <Line data={data} options={options} height={160} />
       <div
         style={{
           textAlign: 'center',
           fontFamily: 'monospace',
-          fontSize: 14,
-          marginTop: 4,
+          fontSize: 18,
+          marginTop: 16,
         }}
       >
-        {timeRange.toUpperCase()}
+        {timeRange.charAt(0).toUpperCase() + timeRange.slice(1)}
       </div>
     </div>
   );

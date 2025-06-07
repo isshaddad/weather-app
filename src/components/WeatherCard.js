@@ -11,7 +11,17 @@ export default function WeatherCard({
   error,
 }) {
   return (
-    <Paper elevation={2} sx={{ p: 2, minHeight: 320, bgcolor: '#fff' }}>
+    <Paper
+      elevation={2}
+      sx={{
+        p: 4,
+        minHeight: 520,
+        bgcolor: '#fff',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+      }}
+    >
       <Typography
         variant="h6"
         sx={{
@@ -31,22 +41,31 @@ export default function WeatherCard({
       </Box>
       <Box
         sx={{
-          height: 140,
-          bgcolor: '#f9f9f9',
-          borderRadius: 2,
-          mb: 2,
+          flex: 1,
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          flexDirection: 'column',
+          justifyContent: 'flex-start',
         }}
       >
-        {loading ? (
-          <CircularProgress size={32} />
-        ) : error ? (
-          <Alert severity="error">{error}</Alert>
-        ) : (
-          <WeatherChart hours={hours} timeRange={timeRange} />
-        )}
+        <Box
+          sx={{
+            bgcolor: '#f9f9f9',
+            borderRadius: 2,
+            mb: 2,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'column',
+          }}
+        >
+          {loading ? (
+            <CircularProgress size={32} />
+          ) : error ? (
+            <Alert severity="error">{error}</Alert>
+          ) : (
+            <WeatherChart hours={hours} timeRange={timeRange} />
+          )}
+        </Box>
       </Box>
     </Paper>
   );
