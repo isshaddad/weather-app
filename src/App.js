@@ -38,18 +38,24 @@ const times = [
 ];
 
 export default function App() {
-  const [location, setLocation] = React.useState('Dolores Park, SF');
-  const [day, setDay] = React.useState('Friday');
-  const [time, setTime] = React.useState('afternoon');
+  const [userEmail, setUserEmail] = React.useState(
+    () => localStorage.getItem('userEmail') || ''
+  );
+  const [location, setLocation] = React.useState(
+    () => localStorage.getItem('location') || 'Dolores Park, SF'
+  );
+  const [day, setDay] = React.useState(
+    () => localStorage.getItem('day') || 'Friday'
+  );
+  const [time, setTime] = React.useState(
+    () => localStorage.getItem('time') || 'afternoon'
+  );
   const [weather, setWeather] = React.useState({
     thisWeek: null,
     nextWeek: null,
   });
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
-  const [userEmail, setUserEmail] = React.useState(
-    () => localStorage.getItem('userEmail') || ''
-  );
 
   const API_KEY = process.env.REACT_APP_VISUAL_CROSSING_API_KEY;
 
@@ -84,6 +90,17 @@ export default function App() {
       isMounted = false;
     };
   }, [location, day, time, API_KEY]);
+
+  // Persist location, day, and time to localStorage on change
+  React.useEffect(() => {
+    localStorage.setItem('location', location);
+  }, [location]);
+  React.useEffect(() => {
+    localStorage.setItem('day', day);
+  }, [day]);
+  React.useEffect(() => {
+    localStorage.setItem('time', time);
+  }, [time]);
 
   const thisSummary = getSummary(weather.thisWeek);
   const nextSummary = getSummary(weather.nextWeek);
