@@ -123,7 +123,17 @@ export default function App() {
               gap: 2,
             }}
           >
-            <Button color="inherit">Help</Button>
+            <Button
+              color="inherit"
+              onClick={() =>
+                window.open(
+                  'https://www.youtube.com/watch?v=2Q_ZzBGPdqE',
+                  '_blank'
+                )
+              }
+            >
+              Help
+            </Button>
             <Button color="inherit" onClick={handleLogout}>
               Sign Out
             </Button>
